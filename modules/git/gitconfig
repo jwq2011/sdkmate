@@ -1,0 +1,49 @@
+# Git 全局配置文件
+# 部署到 ~/.gitconfig
+
+[nobo]
+        # 区域标识（用于某些项目规范）
+        area = {{AREA:-wh}}
+
+[user]
+        # 用户信息（部署时会提示修改或使用占位符）
+        email = {{GIT_EMAIL}}
+        name = {{GIT_NAME}}
+
+[color]
+        # 彩色输出
+        ui = auto
+
+[core]
+        # 默认编辑器
+        editor = vim
+        # 提交时 CRLF→LF，检出时保持 LF
+        autocrlf = input
+        eol = lf
+        # 路径显示不转换
+        quotePath = false
+
+[commit]
+        # 提交信息模板
+        template = ~/.git-commit.template
+
+[init]
+        # 新仓库默认分支名
+        defaultBranch = main
+
+# ------------- 常用别名 -------------
+[alias]
+        # 简洁状态
+        st = status -sb
+        # 图形化日志
+        lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit
+        # 查看最近提交
+        last = log -1 HEAD
+        # 撤销暂存
+        unstage = reset HEAD --
+        # 查看已删除的文件
+        deleted = log --diff-filter=D --summary
+        # 简化 push
+        p = push origin HEAD:refs/for/
+        # 拉取并变基
+        pl = pull --rebase

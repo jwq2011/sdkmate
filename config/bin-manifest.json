@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "tools": {
+    "bsp_qnxlog_analysis.sh": {
+      "hash": "950c96ef7b1f1ab3936bb7a2132863764d275a6088e522ffae9a234b87f48762",
+      "description": "QNX 日志分析工具",
+      "type": "script",
+      "remote_path": "~/bin/bsp_qnxlog_analysis.sh"
+    },
+    "tig": {
+      "hash": "072907d2e31f73196a108f181e38310f540bc64448079c0f8f170da3c9196927",
+      "description": "Git 浏览器",
+      "type": "binary",
+      "remote_path": "~/bin/tig"
+    }
+  }
+}

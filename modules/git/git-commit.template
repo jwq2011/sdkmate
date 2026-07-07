@@ -1,0 +1,18 @@
+# Git 提交信息模板
+# 部署到 ~/.git-commit.template
+#
+# 使用规范：
+# []:[TYPE][AUTHOR] - 类型和作者
+# [MODULE]:模块名
+# [REASON]:修改原因
+# [SOLUTION]:解决方案
+# [IMPACT]:影响范围
+# [TEST RECOMMENDATIONS]:测试建议
+
+[]:[TYPE][AUTHOR]
+
+[MODULE]:模块名
+[REASON]:CR
+[SOLUTION]:修改说明
+[IMPACT]:影响范围
+[TEST RECOMMENDATIONS]:测试建议

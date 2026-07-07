@@ -143,24 +143,71 @@ struct ModuleConfig {
     target: String,
 }
 
-/// Get module configuration
+/// Get module configuration from SDKmate project
 fn get_module_config(module: &str) -> Result<ModuleConfig> {
-    let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
-    let dotfiles_dir = home.join("dotfiles");
+    // First try to find in the SDKmate project directory
+    let exe_path = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("."));
+    let default_path = PathBuf::from(".");
+    let project_dir = exe_path.parent().unwrap_or(default_path.as_path());
 
+    // Try project directory first
+    let modules_dir = project_dir.join("modules");
+    if modules_dir.exists() {
+        return get_module_from_dir(&modules_dir, module);
+    }
+
+    // Try parent directory (for development)
+    let parent_dir = project_dir.parent().unwrap_or(default_path.as_path());
+    let parent_modules = parent_dir.join("modules");
+    if parent_modules.exists() {
+        return get_module_from_dir(&parent_modules, module);
+    }
+
+    // Try current directory
+    let current_modules = PathBuf::from("modules");
+    if current_modules.exists() {
+        return get_module_from_dir(&current_modules, module);
+    }
+
+    // Fallback to home directory
+    let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
+    let home_modules = home.join("dotfiles").join("modules");
+    get_module_from_dir(&home_modules, module)
+}
+
+/// Get module configuration from a specific directory
+fn get_module_from_dir(modules_dir: &PathBuf, module: &str) -> Result<ModuleConfig> {
     match module {
-        "prompt" => Ok(ModuleConfig {
-            source: dotfiles_dir.join("modules/prompt/my_prompt_rc").to_string_lossy().to_string(),
-            target: "~/.my_prompt_rc".to_string(),
-        }),
-        "git" => Ok(ModuleConfig {
-            source: dotfiles_dir.join("modules/git/.gitconfig").to_string_lossy().to_string(),
-            target: "~/.gitconfig".to_string(),
-        }),
-        "bash" => Ok(ModuleConfig {
-            source: dotfiles_dir.join("modules/bash/.bashrc").to_string_lossy().to_string(),
-            target: "~/.bashrc".to_string(),
-        }),
+        "prompt" => {
+            let source = modules_dir.join("prompt").join("my_prompt_rc");
+            if !source.exists() {
+                bail!("Prompt module not found at: {}", source.display());
+            }
+            Ok(ModuleConfig {
+                source: source.to_string_lossy().to_string(),
+                target: "~/.my_prompt_rc".to_string(),
+            })
+        }
+        "git" => {
+            let source = modules_dir.join("git").join(".gitconfig");
+            if !source.exists() {
+                bail!("Git module not found at: {}", source.display());
+            }
+            Ok(ModuleConfig {
+                source: source.to_string_lossy().to_string(),
+                target: "~/.gitconfig".to_string(),
+            })
+        }
+        "bash" => {
+            let source = modules_dir.join("bash").join(".bashrc");
+            if !source.exists() {
+                bail!("Bash module not found at: {}", source.display());
+            }
+            Ok(ModuleConfig {
+                source: source.to_string_lossy().to_string(),
+                target: "~/.bashrc".to_string(),
+            })
+        }
         _ => bail!("Unknown module '{}'. Available: prompt, git, bash", module),
     }
 }

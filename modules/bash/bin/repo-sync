@@ -1,0 +1,9 @@
+#!/bin/bash
+# repo sync 快捷命令
+# 用法: repo-sync [线程数]
+# 默认 j24，可指定如: repo-sync 16
+
+JOBS=${1:-24}
+echo ">>> repo sync -j$JOBS"
+repo sync -c --no-tags --force-remove-dirty -j$JOBS --force-sync --quiet
+echo ">>> 完成"

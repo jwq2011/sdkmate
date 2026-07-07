@@ -1,0 +1,57 @@
+# ~/.my_prompt_rc
+# 自定义终端提示符与行为（通过 source 加载）
+
+# ---------- 路径深度控制 ----------
+# 只显示末尾 3 层目录，前面用 ... 代替
+export PROMPT_DIRTRIM=3
+
+# ---------- 主机名/标签 ----------
+# SSH 远程时显示 SERVER_LABEL（通过 secrets.env 配置）
+# 本地使用时显示简短主机名
+if [ -n "$SSH_TTY" ]; then
+    SAFE_HOST="${SERVER_LABEL:-$(hostname -s)}"
+else
+    SAFE_HOST=$(hostname -s)
+fi
+
+# ---------- 预定义多种提示符风格 ----------
+prompt_default="\u@${SAFE_HOST}:\w\$ "
+prompt_time="\t \u@${SAFE_HOST}:\w\$ "
+prompt_short="\u@${SAFE_HOST}:\$ "
+prompt_minimal="\$ "
+prompt_path_trimmed="\u@${SAFE_HOST}:.../\W\$ "
+
+# ---------- 模式切换函数 ----------
+prompt-mode() {
+    case "$1" in
+        default) PS1="$prompt_default" ;;
+        time)    PS1="$prompt_time" ;;
+        short)   PS1="$prompt_short" ;;
+        minimal) PS1="$prompt_minimal" ;;
+        trim)    PS1="$prompt_path_trimmed" ;;
+        *) echo "用法: prompt-mode {default|time|short|minimal|trim}" ;;
+    esac
+    export PS1
+}
+
+# ---------- 快捷键循环切换（Ctrl+P） ----------
+PROMPT_MODE=default
+prompt-cycle() {
+    local modes=(default time minimal)
+    local curr="$PROMPT_MODE"
+    local next
+    for i in "${!modes[@]}"; do
+        if [[ "${modes[$i]}" == "$curr" ]]; then
+            next=$(( (i + 1) % ${#modes[@]} ))
+            break
+        fi
+    done
+    PROMPT_MODE="${modes[$next]}"
+    prompt-mode "${modes[$next]}"
+}
+bind -x '"\C-p":"prompt-cycle"'
+
+# ---------- 应用默认模式 ----------
+if [ -n "$SSH_TTY" ]; then
+    prompt-mode default
+fi

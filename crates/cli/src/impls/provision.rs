@@ -112,26 +112,34 @@ fn get_config_path() -> PathBuf {
     home.join(".sdkmate").join("servers.toml")
 }
 
-/// Get packages.conf path
+/// Get packages.conf path from SDKmate project
 fn get_packages_conf_path() -> PathBuf {
-    // Try to find packages.conf in common locations
-    let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
+    // First try to find in the SDKmate project directory
+    let exe_path = std::env::current_exe().unwrap_or_else(|_| PathBuf::from("."));
+    let default_path = PathBuf::from(".");
+    let project_dir = exe_path.parent().unwrap_or(default_path.as_path());
 
-    // Check common locations
-    let candidates = vec![
-        home.join("dotfiles").join("config").join("packages.conf"),
-        home.join(".sdkmate").join("packages.conf"),
-        PathBuf::from("config/packages.conf"),
-        PathBuf::from("packages.conf"),
-    ];
-
-    for candidate in candidates {
-        if candidate.exists() {
-            return candidate;
-        }
+    // Try project directory first
+    let project_conf = project_dir.join("config").join("packages.conf");
+    if project_conf.exists() {
+        return project_conf;
     }
 
-    // Return default path even if it doesn't exist
+    // Try parent directory (for development)
+    let parent_dir = project_dir.parent().unwrap_or(default_path.as_path());
+    let parent_conf = parent_dir.join("config").join("packages.conf");
+    if parent_conf.exists() {
+        return parent_conf;
+    }
+
+    // Try current directory
+    let current_conf = PathBuf::from("config").join("packages.conf");
+    if current_conf.exists() {
+        return current_conf;
+    }
+
+    // Fallback to home directory
+    let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
     home.join("dotfiles").join("config").join("packages.conf")
 }
 

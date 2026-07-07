@@ -1,0 +1,77 @@
+# Git 全局忽略文件
+# 部署到 ~/.gitignore_global
+
+# ==================== 操作系统 ====================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.~lock*
+.fuse_hidden*
+.Trash-*
+.nfs*
+
+# ==================== IDE / 编辑器 ====================
+# VS Code
+.vscode/
+*.swp
+*.swo
+
+# Vim
+.*.swp
+.*.swo
+*.un~
+Session.vim
+
+# JetBrains
+.idea/
+*.iml
+
+# ==================== 编译产物 ====================
+# C/C++
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.a
+*.lib
+
+# Java
+*.class
+*.jar
+*.war
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# ==================== 日志和临时文件 ====================
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# ==================== 敏感文件 ====================
+# 密码、密钥等敏感配置
+*.pem
+*.key
+*.secret
+.env
+.env.*
+credentials.json
+secrets.json

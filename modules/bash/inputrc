@@ -1,0 +1,39 @@
+# Readline 输入绑定配置
+# 部署到 ~/.inputrc
+# 提供 bash 中的快捷键绑定
+
+# ==================== 基础绑定 ====================
+# 启用 UTF-8
+set input-meta on
+set output-meta on
+set convert-meta off
+
+# ==================== 快捷键绑定 ====================
+# Ctrl+Left/Right 按单词跳转
+"\e[1;5D": backward-word
+"\e[1;5C": forward-word
+
+# Home/End 键
+"\e[H": beginning-of-line
+"\e[F": end-of-line
+
+# Delete 键
+"\e[3~": delete-char
+
+# Ctrl+Backspace/Delete 删除单词
+"\C-h": backward-kill-word
+"\C-?": backward-kill-word
+
+# ==================== 自动补全 ====================
+# 大小写不敏感补全
+set completion-ignore-case on
+
+# 补全时显示所有选项
+set show-all-if-ambiguous on
+
+# 补全时振动铃铛
+set bell-style visible
+
+# ==================== 查找历史 ====================
+# 增量搜索
+set history-preserve-point on

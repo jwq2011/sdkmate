@@ -1,0 +1,57 @@
+# Bash 主配置文件
+# 部署到 ~/.bashrc
+
+# ==================== 环境变量 ====================
+# PATH 配置
+export PATH=~/bin:$PATH
+
+# ==================== 历史记录 ====================
+# 忽略重复命令
+HISTCONTROL=ignoredups:ignorespace
+# 记录更多历史
+HISTSIZE=10000
+HISTFILESIZE=20000
+# 时间戳
+HISTTIMEFORMAT="%Y-%m-%d %H:%M:%S  "
+
+# ==================== 别名配置 ====================
+# Git 常用命令
+alias gs='git status'
+alias gc='git checkout'
+alias gp='git push origin HEAD:refs/for/'
+alias gl='git log --oneline -10'
+alias gd='git diff'
+alias ga='git add'
+alias gm='git commit'
+alias gb='git branch'
+alias gr='git rebase'
+alias gf='git fetch'
+
+# 开发目录快速跳转
+# 注意：部署时需要修改为实际的项目路径
+alias qnx_ap='cd {{PROJECT_PATH}}/QNX/workspace/modules/bsp/apps/qnx_ap/'
+
+# ==================== 系统工具 ====================
+# ls 别名
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# 目录操作
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# 安全操作
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+# ==================== Git 提交模板快捷命令 ====================
+# 快速查看当前项目的提交规范
+alias git-template="cat ~/.git-commit.template"
+
+# ==================== dotfiles 快捷命令 ====================
+# 加载 dotfiles 快捷命令和补全
+[ -f ~/.dotfiles.sh ] && source ~/.dotfiles.sh
+[ -f ~/.dotfiles_completion.sh ] && source ~/.dotfiles_completion.sh
