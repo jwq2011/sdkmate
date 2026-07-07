@@ -12,6 +12,9 @@
 | [`sdkm switch`](#sdkm-switch) | `s` | 切换到本地已安装版本 |
 | [`sdkm current`](#sdkm-current) | `c` | 查看当前激活版本 |
 | [`sdkm config`](#sdkm-config) | — | 配置管理（7 个子命令） |
+| [`sdkm server`](#sdkm-server) | — | 服务器管理（4 个子命令） |
+| [`sdkm deploy`](#sdkm-deploy) | — | 配置部署到远程服务器 |
+| [`sdkm provision`](#sdkm-provision) | — | 服务器预配（安装软件包 + 同步工具） |
 
 ---
 
@@ -175,3 +178,93 @@ sdkm config edit                                      # 用编辑器打开 confi
 **写入安全**：`set` / `delete` / `add-sdk` / `remove-sdk` 均采用**原子写入**（写入临时文件再重命名），操作失败时自动**快照回滚**到操作前的配置内容。
 
 **内置 SDK 保护**：内置 SDK（java/node/python/maven）的所有字段不可 `delete`，也不可 `remove-sdk`，只能通过 `set` 修改。
+
+---
+
+## sdkm server
+
+管理远程服务器配置。详细文档见 [server-management.md](./server-management.md)。
+
+```bash
+sdkm server <subcommand> [args]
+```
+
+| 子命令 | 别名 | 作用 |
+|:---|:---|:---|
+| `add <alias> <user@host>` | — | 添加服务器配置 |
+| `remove <alias>` | `rm` | 移除服务器配置 |
+| `list` | `ls` | 列出所有服务器 |
+| `status` | `st` | 查看服务器状态 |
+
+示例：
+
+```bash
+sdkm server add wsl2 root@192.168.1.100 --port 22 --label "WSL2 开发环境"
+sdkm server add prod-db admin@10.0.0.50 --tags "prod,database" --port 2222
+sdkm server list                    # 列出所有服务器
+sdkm server list --filter prod      # 按标签过滤
+sdkm server remove wsl2             # 移除服务器
+sdkm server status                  # 查看服务器状态
+```
+
+---
+
+## sdkm deploy
+
+将配置文件部署到远程服务器。详细文档见 [deployment.md](./deployment.md)。
+
+```bash
+sdkm deploy <module> <targets...> [OPTIONS]
+```
+
+- `<module>`：部署模块，支持 `prompt` / `git` / `bash`。
+- `<targets...>`：目标服务器（别名或 `user@host`），支持多个。
+
+选项：
+
+| 选项 | 短选项 | 说明 | 默认值 |
+|:---|:---|:---|:---|
+| `--dry-run` | `-d` | 预览模式，不实际执行 | false |
+| `--parallel LIMIT` | `-p` | 并行部署数量限制 | 5 |
+
+示例：
+
+```bash
+sdkm deploy prompt wsl2                          # 部署 prompt 到单台服务器
+sdkm deploy git wsl2 dev-remote                  # 部署 git 配置到多台服务器
+sdkm deploy bash root@192.168.1.100 --dry-run    # 预览模式
+sdkm deploy prompt server1 server2 --parallel 2  # 限制并行数量
+```
+
+---
+
+## sdkm provision
+
+预配远程服务器（安装软件包 + 同步工具）。详细文档见 [provisioning.md](./provisioning.md)。
+
+```bash
+sdkm provision <targets...> [OPTIONS]
+```
+
+- `<targets...>`：目标服务器（别名或 `user@host`），支持多个。
+
+选项：
+
+| 选项 | 短选项 | 说明 | 默认值 |
+|:---|:---|:---|:---|
+| `--dry-run` | `-d` | 预览模式，不实际执行 | false |
+| `--only-pkg` | — | 只安装系统软件包 | false |
+| `--only-bin` | — | 只同步自定义工具 | false |
+| `--skip-update` | — | 跳过包管理器缓存更新 | false |
+| `--packages-conf` | — | 自定义 packages.conf 路径 | 自动检测 |
+
+示例：
+
+```bash
+sdkm provision wsl2                                    # 完整预配
+sdkm provision wsl2 --dry-run                          # 预览模式
+sdkm provision wsl2 --only-pkg                         # 只安装系统软件包
+sdkm provision wsl2 --only-bin                         # 只同步自定义工具
+sdkm provision wsl2 --packages-conf ./packages.conf    # 使用自定义配置文件
+sdkm provision server1 server2 --filter prod           # 批量预配
+```

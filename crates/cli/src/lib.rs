@@ -1,13 +1,16 @@
+use crate::impls::config::ConfigHandler;
 use crate::impls::current::CurrentHandler;
+use crate::impls::deploy::DeployHandler;
 use crate::impls::init::InitHandler;
 use crate::impls::install::InstallHandler;
 use crate::impls::list::ListHandler;
+use crate::impls::provision::ProvisionHandler;
+use crate::impls::server::ServerHandler;
 use crate::impls::switch::SwitchHandler;
-use crate::impls::config::ConfigHandler;
 use clap::builder::styling;
 use clap::{ColorChoice, Parser, Subcommand};
-use std::process::ExitCode;
 use crossterm::style::Stylize;
+use std::process::ExitCode;
 use util::consts::{ABOUT, BANNER, BugReportError};
 use util::error;
 use util::terminal::suggest_bug_report;
@@ -43,6 +46,15 @@ pub enum Commands {
 
     #[command(name = "config", about = "View or edit sdkm configuration")]
     Config(ConfigHandler),
+
+    #[command(name = "server", about = "Manage remote servers")]
+    Server(ServerHandler),
+
+    #[command(name = "deploy", about = "Deploy configuration to servers")]
+    Deploy(DeployHandler),
+
+    #[command(name = "provision", about = "Provision servers with packages and tools")]
+    Provision(ProvisionHandler),
 }
 
 impl SdkMateCli {
@@ -62,7 +74,6 @@ pub trait CommandHandler {
 impl Commands {
     /// 执行子命令，返回退出码
     pub fn run(self) -> ExitCode {
-        // 获取完整命令行输入（用于 bug report 信息）
         let command_line = full_command_line();
         let res = match self {
             Commands::Init(handler) => handler.run(),
@@ -71,6 +82,9 @@ impl Commands {
             Commands::Switch(handler) => handler.run(),
             Commands::Current(handler) => handler.run(),
             Commands::Config(handler) => handler.run(),
+            Commands::Server(handler) => handler.run(),
+            Commands::Deploy(handler) => handler.run(),
+            Commands::Provision(handler) => handler.run(),
         };
         match res {
             Ok(()) => ExitCode::SUCCESS,
@@ -78,7 +92,6 @@ impl Commands {
                 error!("{}", cli_err);
                 #[cfg(debug_assertions)]
                 error!("debug log detail:\n {}", cli_err.backtrace());
-                // 检测 BugReport 标记 → 提示 bug report
                 if needs_bug_report(&cli_err) {
                     suggest_bug_report(&command_line, &cli_err.to_string());
                 }
@@ -99,11 +112,9 @@ fn needs_bug_report(err: &anyhow::Error) -> bool {
 /// 使用 std::env::args 获取原始输入，去掉 args[0]（程序路径）只保留子命令和参数
 fn full_command_line() -> String {
     let args: Vec<String> = std::env::args().collect();
-    // args[0] 是程序路径（如 "sdkm.exe"），不需要包含在输出中
     args[1..].join(" ")
 }
 
-// 定义 cargo 风格的颜色方案
 fn cargo_style() -> styling::Styles {
     styling::Styles::styled()
         .header(styling::AnsiColor::Green.on_default() | styling::Effects::BOLD)

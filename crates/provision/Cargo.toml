@@ -1,0 +1,18 @@
+[package]
+name = "provision"
+publish = false
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+tokio = { workspace = true, features = ["process"] }
+anyhow = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+regex-lite = { workspace = true }
+async-trait = "0.1"
+deploy = { path = "../deploy" }
+util = { path = "../util" }

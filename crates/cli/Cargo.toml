@@ -10,8 +10,12 @@ description.workspace = true
 [dependencies]
 sdkcore = { workspace = true }
 util = { workspace = true }
+config_mgr = { workspace = true }
+deploy = { workspace = true }
+provision = { workspace = true }
 clap = { workspace = true }
 crossterm = { workspace = true }
 anyhow = { workspace = true}
 tokio = { workspace = true }
 unicode-width = { workspace = true }
+dirs = "5"

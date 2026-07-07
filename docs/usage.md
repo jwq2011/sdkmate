@@ -9,6 +9,9 @@
 | [commands.md](./commands.md) | 每个子命令的参数、别名、行为与示例（init / install / list / switch / current / config） |
 | [configuration.md](./configuration.md) | `config.toml` 结构、每个配置项含义、类型校验规则、写入安全机制 |
 | [custom-sdk.md](./custom-sdk.md) | 用 `add-sdk` 注册任意工具为自定义 SDK、URL 模板占位符系统 |
+| [server-management.md](./server-management.md) | 服务器管理：添加、删除、列出远程服务器配置 |
+| [deployment.md](./deployment.md) | 配置部署：将 prompt/git/bash 配置部署到远程服务器 |
+| [provisioning.md](./provisioning.md) | 服务器预配：安装系统软件包、同步自定义工具 |
 
 ## 30 秒快速上手
 

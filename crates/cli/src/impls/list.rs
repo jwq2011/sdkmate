@@ -2,8 +2,8 @@ use crate::CommandHandler;
 use crate::tui::{SelectorAction, run_local_selector, run_remote_selector};
 use anyhow::{Result, bail};
 use clap::Parser;
-use sdkcore::manager::SdkManager;
 use sdkcore::list::RemoteVersionResult;
+use sdkcore::manager::SdkManager;
 use util::sdk::Sdk;
 
 #[derive(Debug, Parser)]

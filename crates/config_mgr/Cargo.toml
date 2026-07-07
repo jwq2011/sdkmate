@@ -1,0 +1,16 @@
+[package]
+name = "config_mgr"
+publish = false
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description.workspace = true
+
+[dependencies]
+toml = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+anyhow = { workspace = true }
+aes-gcm = "0.10"
+rand = "0.8"
+util = { path = "../util" }

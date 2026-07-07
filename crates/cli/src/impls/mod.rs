@@ -1,6 +1,9 @@
 pub mod config;
 pub mod current;
+pub mod deploy;
 pub mod init;
 pub mod install;
 pub mod list;
+pub mod provision;
+pub mod server;
 pub mod switch;

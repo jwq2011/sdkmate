@@ -14,6 +14,9 @@ members = [
     "crates/sdkcore",
     "crates/cli",
     "crates/util",
+    "crates/deploy",
+    "crates/config_mgr",
+    "crates/provision",
 ]
 
 # 公共依赖版本管理（统一版本，避免冲突）
@@ -52,10 +55,21 @@ windows-sys = { version = "0.61", features = [
 unicode-width = {version = "0.2"}
 url = { version = "2" }
 regex-lite = { version = "0.1" }
+dirs = "5"
+
+# 新增：部署引擎依赖
+ssh2 = "0.9"
+async-trait = "0.1"
+aes-gcm = "0.10"
+rand = "0.8"
+
 # 内部 crate 依赖（path-only，无 version 约束；子 crate version.workspace=true 继承，bump 根版本即全工作区升版）
 cli = { path = "crates/cli" }
 sdkcore = { path = "crates/sdkcore" }
 util = { path = "crates/util" }
+deploy = { path = "crates/deploy" }
+config_mgr = { path = "crates/config_mgr" }
+provision = { path = "crates/provision" }
 
 #根目录 包配置
 [package]
